@@ -1,7 +1,7 @@
 import React from 'react'
 import 'bulma/css/bulma.min.css'
 import enums from '../../enums'
-import { isEqualText, truncateText } from '../utils'
+import { isEqualText, truncateText } from '../../utils'
 
 /**
  * @function TextInput

@@ -1,7 +1,7 @@
 import React from 'react'
 import 'bulma/css/bulma.min.css'
 import enums from '../../enums'
-import { truncateText, isEqualText } from '../utils'
+import { truncateText, isEqualText } from '../../utils'
 
 /**
  * @function CustomRadioInput
