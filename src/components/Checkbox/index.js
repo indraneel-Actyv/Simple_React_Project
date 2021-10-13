@@ -1,30 +1,28 @@
 import React from 'react'
 import 'bulma/css/bulma.min.css'
 import enums from '../../enums'
-import { isEqualText, truncateText } from '../utils'
+import { truncateText, isEqualText } from '../utils'
+import _ from 'lodash'
 
 /**
- * @function TextInput
- * @description This is used to render Text Input component
+ * @function CustomCheckboxInput
+ * @description This is used to render Custom Checkbox Input component
  * @param {Object} props
  * @returns {Component}
  */
-const TextInput = (props = {}) => {
+const CustomCheckboxInput = (props = {}) => {
   /**
    * The props sent to the component
    */
   const {
     label = enums.EMPTY,
-    inputType = enums.DEFAULT_TYPE,
-    placeholder = enums.EMPTY,
     fieldName = enums.EMPTY,
     required = false,
     errorMessage = enums.EMPTY,
-    units = enums.EMPTY,
-    unitsPosition = enums.EMPTY,
     visibility = true,
     isEditable = true,
-    value = enums.EMPTY,
+    value = enums.EMPTY_ARRAY,
+    options = enums.EMPTY_ARRAY,
     onChangeHandler = enums.EMPTY_FUNCTION
   } = props
 
@@ -36,18 +34,12 @@ const TextInput = (props = {}) => {
   const renderRequiredAsterisk = () => required ? <sup className='has-text-danger ml-1'>*</sup> : null
 
   /**
-   * @const renderSideUnits
-   * @description This function is used to conditionally render side Units
-   * @returns {Component}
+   * @const isChecked
+   * @description This function is used to conditionally check if the key is checked or not in given value array
+   * @param {String} key
+   * @returns {Boolean}
    */
-  const renderSideUnits = (position = enums.LEFT) =>
-    isEqualText(unitsPosition, position)
-      ? (
-        <p className='control'>
-          <p className='button is-static'>{units}</p>
-        </p>
-        )
-      : null
+  const isChecked = (key = '') => _.isArray(value) && value.findIndex(eachValue => isEqualText(eachValue, key)) > -1
 
   /**
    * @const renderLabel
@@ -61,29 +53,30 @@ const TextInput = (props = {}) => {
     </label>)
 
   /**
-   * @const renderTextInput
+   * @const renderCheckbox
    * @description This function is used to render text input
    * @returns {Component}
    */
-  const renderTextInput = () => (
-    <div className='field has-addons'>
-      {renderSideUnits(enums.LEFT)}
-      <p className='control is-expanded'>
-        <input className='input is-normal' name={fieldName} type={inputType} placeholder={placeholder} disabled={!isEditable} value={value} onChange={onChangeHandler} />
-      </p>
-      {renderSideUnits(enums.RIGHT)}
+  const renderCheckbox = () => (
+    <div className='control columns is-vcentered is-multiline is-gapless'>
+      {options.map((eachOption, index) => (
+        <label className='column columns is-vcentered is-flex mb-0 is-half' key={index}>
+          <input className='ml-0' name={eachOption.key} type={enums.CHECKBOX_TYPE} disabled={!isEditable} checked={isChecked(eachOption.key)} onChange={(e) => onChangeHandler(e, fieldName)} />
+          <p className='has-text-black is-size-6 column'>{eachOption.label}</p>
+        </label>
+      ))}
     </div>
   )
 
   /**
-   * @const renderLabelAndTextInput
+   * @const renderLabelAndCheckbox
    * @description This function is used to render both Label and text input
    * @returns {Component}
    */
-  const renderLabelAndTextInput = () => (
+  const renderLabelAndCheckbox = () => (
     <div className='field'>
       {renderLabel()}
-      {renderTextInput()}
+      {renderCheckbox()}
       <p className='help has-text-danger mb-5'>{errorMessage}</p>
     </div>
   )
@@ -91,7 +84,7 @@ const TextInput = (props = {}) => {
   /**
    * Returning the whole component
    */
-  return visibility ? renderLabelAndTextInput() : null
+  return visibility ? renderLabelAndCheckbox() : null
 }
 
-export default TextInput
+export default CustomCheckboxInput

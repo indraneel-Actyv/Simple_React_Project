@@ -1,4 +1,4 @@
-import enums from '../TextInput/enums'
+import enums from '../../enums'
 import _ from 'lodash'
 
 /**
